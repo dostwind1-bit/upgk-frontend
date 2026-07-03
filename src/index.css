@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-paper text-charcoal font-body;
+}
+
+::selection {
+  background-color: #F2A93B;
+  color: #14213D;
+}
+
+.font-display {
+  font-optical-sizing: auto;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d9d2c3; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #c7bea9; }
+
+/* Focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #F2A93B;
+  outline-offset: 2px;
+}
