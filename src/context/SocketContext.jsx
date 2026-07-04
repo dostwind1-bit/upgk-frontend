@@ -4,9 +4,19 @@ import { useAuth } from './AuthContext';
 
 const SocketContext = createContext(null);
 
-const SOCKET_URL = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace('/api', '')
-  : 'http://localhost:5000';
+const normalizeSocketUrl = (value) => {
+  if (!value) return 'http://localhost:5000';
+
+  const trimmed = String(value).trim().replace(/\/$/, '');
+  const withoutApiPath = trimmed.replace(/\/api\/?$/, '');
+  const withoutDuplicateProtocol = withoutApiPath.replace(/^([a-z]+:\/\/)+/i, (match) => {
+    return withoutApiPath.startsWith('https://') ? 'https://' : 'http://';
+  });
+
+  return withoutDuplicateProtocol.replace(/\/$/, '');
+};
+
+const SOCKET_URL = normalizeSocketUrl(import.meta.env.VITE_API_URL);
 
 export function SocketProvider({ children }) {
   const { user } = useAuth();
