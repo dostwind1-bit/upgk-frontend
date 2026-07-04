@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, MessageSquare, Eye, ShieldCheck, PlayCircle, HelpCircle } from 'lucide-react';
 
 const CATEGORY_COLORS = {
@@ -17,7 +17,9 @@ function timeAgo(dateStr) {
 }
 
 export default function PostCard({ post }) {
+  const navigate = useNavigate();
   const tabColor = CATEGORY_COLORS[post.category] || CATEGORY_COLORS.general;
+  const authorId = post.author?._id || post.author;
 
   return (
     <Link
@@ -30,7 +32,17 @@ export default function PostCard({ post }) {
         <div className="flex items-center gap-2 text-xs text-muted mb-2">
           <span className="uppercase tracking-wide font-semibold text-teal">{post.category}</span>
           <span>&middot;</span>
-          <span>{post.author?.name}</span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (authorId) navigate(`/profile/${authorId}`);
+            }}
+            className="hover:text-teal"
+          >
+            {post.author?.name}
+          </button>
           <span>&middot;</span>
           <span>{timeAgo(post.createdAt)}</span>
           {post.moderationStatus === 'approved' && (

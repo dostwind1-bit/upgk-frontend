@@ -9,6 +9,7 @@ import CreatePost from './pages/CreatePost';
 import PostDetail from './pages/PostDetail';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
+import PublicProfile from './pages/PublicProfile';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/create" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
         <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/profile/:userId" element={<PublicProfile />} />
       </Routes>
     </div>
   );
