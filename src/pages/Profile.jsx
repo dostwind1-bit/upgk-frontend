@@ -4,6 +4,23 @@ import api from '../services/api';
 import PostCard from '../components/PostCard';
 import toast from 'react-hot-toast';
 
+const CATEGORY_OPTIONS = [
+  'General',
+  'Education',
+  'Technology',
+  'Health & Fitness',
+  'Business & Finance',
+  'Career & Jobs',
+  'Relationships',
+  'Entertainment',
+  'Sports',
+  'Science',
+  'Personal Development',
+  'Travel',
+  'Food',
+  'Sawaal',
+];
+
 export default function Profile() {
   const { user, setUser } = useAuth();
   const [posts, setPosts] = useState([]);
@@ -12,6 +29,11 @@ export default function Profile() {
   const [editingPost, setEditingPost] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
+  const [editCategory, setEditCategory] = useState('General');
+  const [editTags, setEditTags] = useState('');
+  const [editImageAltText, setEditImageAltText] = useState('');
+  const [editMetaDescription, setEditMetaDescription] = useState('');
+  const [editImageFiles, setEditImageFiles] = useState([]);
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
@@ -35,17 +57,45 @@ export default function Profile() {
     setEditingPost(post);
     setEditTitle(post.title || '');
     setEditContent(post.content || '');
+    setEditCategory(post.category || 'General');
+    setEditTags((post.tags || []).join(', '));
+    setEditImageAltText(post.imageAltText || '');
+    setEditMetaDescription(post.metaDescription || '');
+    setEditImageFiles([]);
   };
 
   const saveEdit = async (e) => {
     e.preventDefault();
     if (!editingPost) return;
 
+    const hasTitleChanged = editTitle.trim() !== (editingPost.title || '').trim();
+    const hasContentChanged = editContent !== (editingPost.content || '');
+    const hasCategoryChanged = editCategory !== (editingPost.category || 'General');
+    const hasTagsChanged = editTags !== (editingPost.tags || []).join(', ');
+    const hasAltChanged = editImageAltText !== (editingPost.imageAltText || '');
+    const hasMetaChanged = editMetaDescription !== (editingPost.metaDescription || '');
+    const hasImageChanges = editImageFiles.length > 0;
+
+    if (!hasTitleChanged && !hasContentChanged && !hasCategoryChanged && !hasTagsChanged && !hasAltChanged && !hasMetaChanged && !hasImageChanges) {
+      toast.error('Kuch change karo');
+      return;
+    }
+
     setUpdating(true);
     try {
-      const { data } = await api.put(`/posts/${editingPost._id}`, { title: editTitle, content: editContent });
+      const fd = new FormData();
+      if (hasTitleChanged) fd.append('title', editTitle.trim());
+      if (hasContentChanged) fd.append('content', editContent);
+      if (hasCategoryChanged) fd.append('category', editCategory);
+      if (hasTagsChanged) fd.append('tags', editTags);
+      if (hasAltChanged) fd.append('imageAltText', editImageAltText);
+      if (hasMetaChanged) fd.append('metaDescription', editMetaDescription);
+      editImageFiles.forEach((file) => fd.append('images', file));
+
+      const { data } = await api.put(`/posts/${editingPost._id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
       setPosts((prev) => prev.map((post) => (post._id === data._id ? data : post)));
       setEditingPost(null);
+      setEditImageFiles([]);
       toast.success('Post update ho gaya');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Post update failed');
@@ -118,11 +168,52 @@ export default function Profile() {
                   className="w-full min-h-24 border border-ink/20 rounded-lg px-3 py-2 text-sm"
                   placeholder="Content"
                 />
+                <div className="grid gap-3 md:grid-cols-2">
+                  <select
+                    value={editCategory}
+                    onChange={(e) => setEditCategory(e.target.value)}
+                    className="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm"
+                  >
+                    {CATEGORY_OPTIONS.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                  <input
+                    value={editTags}
+                    onChange={(e) => setEditTags(e.target.value)}
+                    className="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Tags (comma separated)"
+                  />
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <input
+                    value={editImageAltText}
+                    onChange={(e) => setEditImageAltText(e.target.value)}
+                    className="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Image alt text"
+                  />
+                  <input
+                    value={editMetaDescription}
+                    onChange={(e) => setEditMetaDescription(e.target.value)}
+                    className="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm"
+                    placeholder="Meta description"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted mb-1 block">Replace images (optional)</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => setEditImageFiles(Array.from(e.target.files || []).slice(0, 5))}
+                    className="text-sm"
+                  />
+                </div>
                 <div className="flex gap-2">
                   <button type="submit" disabled={updating} className="bg-ink text-paper px-3 py-2 rounded-lg text-sm disabled:opacity-60">
                     {updating ? 'Saving...' : 'Save'}
                   </button>
-                  <button type="button" onClick={() => setEditingPost(null)} className="px-3 py-2 rounded-lg text-sm border border-ink/20">
+                  <button type="button" onClick={() => { setEditingPost(null); setEditImageFiles([]); }} className="px-3 py-2 rounded-lg text-sm border border-ink/20">
                     Cancel
                   </button>
                 </div>
