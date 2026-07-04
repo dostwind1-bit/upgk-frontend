@@ -11,12 +11,29 @@ const POST_TYPES = [
   { key: 'video', label: 'Video Post' },
 ];
 
+const CATEGORY_OPTIONS = [
+  'General',
+  'Education',
+  'Technology',
+  'Health & Fitness',
+  'Business & Finance',
+  'Career & Jobs',
+  'Relationships',
+  'Entertainment',
+  'Sports',
+  'Science',
+  'Personal Development',
+  'Travel',
+  'Food',
+  'Sawaal',
+];
+
 export default function CreatePost() {
   const navigate = useNavigate();
   const [postType, setPostType] = useState('blog');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('python');
+  const [category, setCategory] = useState('General');
   const [tags, setTags] = useState('');
   const [images, setImages] = useState([]);
   const [videoType, setVideoType] = useState('youtube');
@@ -121,10 +138,9 @@ export default function CreatePost() {
             onChange={(e) => setCategory(e.target.value)}
             className="border border-ink/20 rounded-lg px-4 py-2.5 outline-none focus:border-teal"
           >
-            <option value="python">Python</option>
-            <option value="ai">AI/ML</option>
-            <option value="sql">SQL</option>
-            <option value="general">General</option>
+            {CATEGORY_OPTIONS.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
           </select>
           <input
             placeholder="Tags (comma se separate)"

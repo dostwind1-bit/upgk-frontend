@@ -6,10 +6,29 @@ import { Loader2 } from 'lucide-react';
 
 const CATEGORIES = [
   { key: '', label: 'Sabhi' },
-  { key: 'python', label: 'Python' },
-  { key: 'ai', label: 'AI/ML' },
-  { key: 'sql', label: 'SQL' },
-  { key: 'general', label: 'General' },
+  { key: 'General', label: 'General' },
+  { key: 'Education', label: 'Education' },
+  { key: 'Technology', label: 'Technology' },
+  { key: 'Career & Jobs', label: 'Career' },
+  { key: 'Entertainment', label: 'Entertainment' },
+  { key: 'Sawaal', label: 'Sawaal' },
+];
+
+const ALL_CATEGORIES = [
+  'General',
+  'Education',
+  'Technology',
+  'Health & Fitness',
+  'Business & Finance',
+  'Career & Jobs',
+  'Relationships',
+  'Entertainment',
+  'Sports',
+  'Science',
+  'Personal Development',
+  'Travel',
+  'Food',
+  'Sawaal',
 ];
 
 const TYPES = [
@@ -68,6 +87,16 @@ export default function Home() {
             {c.label}
           </button>
         ))}
+        <select
+          value={category}
+          onChange={(e) => { setCategory(e.target.value); setPage(1); }}
+          className="rounded-full border border-ink/15 bg-white px-3 py-1.5 text-sm"
+        >
+          <option value="">More Categories</option>
+          {ALL_CATEGORIES.filter((value) => !CATEGORIES.some((item) => item.key === value)).map((value) => (
+            <option key={value} value={value}>{value}</option>
+          ))}
+        </select>
         <span className="w-px bg-ink/15 mx-1" />
         {TYPES.map((t) => (
           <button
