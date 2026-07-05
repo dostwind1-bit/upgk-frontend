@@ -145,15 +145,21 @@ export default function Profile() {
       <h2 className="font-display text-xl text-ink font-medium mb-4">Aapke Posts</h2>
       <div className="flex flex-col gap-4">
         {posts.map((post) => (
-          <div key={post._id} className="relative">
-            <PostCard post={post} />
-            <button
-              type="button"
-              onClick={() => startEdit(post)}
-              className="absolute top-4 right-4 text-xs font-medium text-teal hover:text-ink"
-            >
-              Edit
-            </button>
+         <div key={post._id} className="relative">
+         <div className="flex items-center justify-end gap-2 mb-1 px-1">
+        <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          startEdit(post);
+        }}
+        className="text-xs font-semibold text-teal hover:text-ink bg-white border border-teal/30 rounded-full px-3 py-1 shadow-sm hover:shadow transition-all"
+      >
+        ✏️ Edit
+      </button>
+    </div>
+    <PostCard post={post} />
             {editingPost?._id === post._id && (
               <form onSubmit={saveEdit} className="mt-3 rounded-card border border-ink/10 bg-paperDim p-4 space-y-3">
                 <input
