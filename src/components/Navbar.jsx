@@ -38,7 +38,7 @@ export default function Navbar() {
                 to="/create"
                 className="hidden sm:flex items-center gap-1.5 bg-saffron text-ink px-4 py-2 rounded-full text-sm font-semibold hover:bg-marigold transition-colors"
               >
-                <PenSquare size={15} /> Post karo
+                <PenSquare size={15} /> Post
               </Link>
               <Link to="/chat" className="p-2 rounded-full hover:bg-inkLight transition-colors" aria-label="Chat">
                 <MessageCircle size={20} />
@@ -63,7 +63,7 @@ export default function Navbar() {
                 to="/register"
                 className="bg-saffron text-ink px-4 py-2 rounded-full text-sm font-semibold hover:bg-marigold transition-colors"
               >
-                Shuru Karo
+                Start 
               </Link>
             </>
           )}

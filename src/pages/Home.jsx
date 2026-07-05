@@ -72,7 +72,7 @@ export default function Home() {
         <h1 className="font-display text-3xl text-ink font-medium">
           {search ? `"${search}" ke results` : 'Community Feed'}
         </h1>
-        <p className="text-muted text-sm mt-1">Ek platform, gyaan ke kai raaste — sab AI-verified.</p>
+        <p className="text-muted text-sm mt-1">Ask questions. Share your world. Join the conversation.</p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
@@ -92,7 +92,7 @@ export default function Home() {
           onChange={(e) => { setCategory(e.target.value); setPage(1); }}
           className="rounded-full border border-ink/15 bg-white px-3 py-1.5 text-sm"
         >
-          <option value="">More Categories</option>
+          <option value="">Explore More</option>
           {ALL_CATEGORIES.filter((value) => !CATEGORIES.some((item) => item.key === value)).map((value) => (
             <option key={value} value={value}>{value}</option>
           ))}
@@ -115,7 +115,7 @@ export default function Home() {
         <div className="flex justify-center py-20 text-muted"><Loader2 className="animate-spin" /></div>
       ) : posts.length === 0 ? (
         <div className="text-center py-20 text-muted">
-          Koi post nahi mila. Sabse pehle post karne wale aap bano!
+          No posts yet. Be the first to share!
         </div>
       ) : (
         <div className="flex flex-col gap-4">
